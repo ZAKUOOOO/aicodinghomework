@@ -86,4 +86,11 @@ app.get('/api/posts/favorites', (c) => {
 const server = serve({ fetch: app.fetch, port: 0 });
 app.server = server;
 
+// Start server if run directly
+const isMainModule = import.meta.url === `file://${process.argv[1]}` || process.argv[1].includes('src\\index.js');
+if (isMainModule) {
+  const mainServer = serve({ fetch: app.fetch, port: 3000 });
+  console.log('Server is running on port 3000');
+}
+
 export default app;
