@@ -1,11 +1,15 @@
 <template>
-  <div class="post-list">
+  <div class="favorites">
+    <h2>我的收藏</h2>
+    
     <div v-if="loading" class="loading-message">加载中...</div>
-    <div v-else-if="posts.length === 0" class="empty-message">
-      还没有发布任何内容，快来发布第一条吧！
+    
+    <div v-else-if="favorites.length === 0" class="empty-message">
+      还没有收藏任何内容，快去浏览并收藏吧！
     </div>
+    
     <div v-else>
-      <div v-for="post in posts" :key="post.id" class="post">
+      <div v-for="post in favorites" :key="post.id" class="post">
         <div class="post-header">
           <span class="post-time">{{ formatTime(post.timestamp) }}</span>
           <button class="delete-btn" @click="deletePost(post.id)">删除</button>
@@ -32,11 +36,11 @@ import { computed, onMounted } from 'vue'
 import { usePostStore } from '../stores/postStore'
 
 const store = usePostStore()
-const posts = computed(() => store.sortedPosts)
+const favorites = computed(() => store.sortedFavorites)
 const loading = computed(() => store.loading)
 
 onMounted(() => {
-  store.fetchPosts()
+  store.fetchFavorites()
 })
 
 const formatTime = (timestamp) => {
@@ -66,8 +70,14 @@ const favoritePost = (id) => {
 </script>
 
 <style scoped>
-.post-list {
+.favorites {
   margin-top: 20px;
+}
+
+.favorites h2 {
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 1.5em;
 }
 
 .post {
