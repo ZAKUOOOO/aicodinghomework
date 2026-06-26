@@ -5,20 +5,46 @@
       <p>分享你的瞬间</p>
     </header>
     
-    <PostForm @publish="handlePublish" />
-    <PostList />
+    <nav class="nav">
+      <button 
+        class="nav-btn" 
+        :class="{ active: currentView === 'home' }"
+        @click="currentView = 'home'"
+      >
+        首页
+      </button>
+      <button 
+        class="nav-btn" 
+        :class="{ active: currentView === 'favorites' }"
+        @click="currentView = 'favorites'"
+      >
+        收藏
+      </button>
+    </nav>
+    
+    <div v-if="currentView === 'home'">
+      <PostForm @publish="handlePublish" />
+      <PostList />
+    </div>
+    
+    <div v-else-if="currentView === 'favorites'">
+      <Favorites />
+    </div>
   </div>
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import { usePostStore } from './stores/postStore'
 import PostForm from './components/PostForm.vue'
 import PostList from './components/PostList.vue'
+import Favorites from './components/Favorites.vue'
 
 const store = usePostStore()
+const currentView = ref('home')
 
-const handlePublish = (post) => {
-  store.addPost(post)
+const handlePublish = async (post) => {
+  await store.addPost(post)
 }
 </script>
 
@@ -53,5 +79,35 @@ header h1 {
 header p {
   color: #666;
   margin-top: 5px;
+}
+
+.nav {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  background: white;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.nav-btn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  background: #f0f0f0;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s;
+}
+
+.nav-btn:hover {
+  background: #e0e0e0;
+}
+
+.nav-btn.active {
+  background: #1da1f2;
+  color: white;
 }
 </style>
